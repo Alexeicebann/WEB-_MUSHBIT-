@@ -336,7 +336,11 @@
   .cart-summary{border-top:1px solid var(--line); padding-top:18px; margin-top:18px;}
   .cart-subtotal{display:flex; justify-content:space-between; align-items:center; font-size:16px; font-weight:700; color:var(--forest); margin-bottom:16px;}
   .cart-checkout-form{display:flex; flex-direction:column; gap:10px;}
-  .cart-checkout-form input{padding:12px 16px; border-radius:14px; border:1px solid var(--line); font-family:inherit; font-size:14px; background:#fff; color:var(--ink);}
+  .cart-checkout-form input, .cart-checkout-form select{padding:12px 16px; border-radius:14px; border:1px solid var(--line); font-family:inherit; font-size:14px; background:#fff; color:var(--ink);}
+  .cart-checkout-form select{appearance:none; -webkit-appearance:none; padding-right:40px; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231F3B2C' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center; cursor:pointer;}
+  .cart-checkout-form select:invalid{color:#8a8f8b;}
+  .checkout-row{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:10px;}
+  .checkout-row input{min-width:0;}
   .cart-hint{font-size:11.5px; color:var(--ink-soft); margin:0 0 4px;}
   .cart-sub-check{display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.4; cursor:pointer; margin:2px 0 4px;}
   .cart-sub-check strong{color:var(--forest);}
@@ -1370,10 +1374,10 @@
           <a href="https://www.instagram.com/mush.bits/" id="socialInstagram" aria-label="Instagram" target="_blank" rel="noopener">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
           </a>
-          <a href="https://www.tiktok.com/@mushbits" id="socialTiktok" aria-label="TikTok" target="_blank" rel="noopener">
+          <a href="#" id="socialTiktok" aria-label="TikTok" target="_blank" rel="noopener">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.2a4 4 0 1 0 4 4V3.2a5.4 5.4 0 0 0 5.2 5.4"/></svg>
           </a>
-          <a href="https://www.facebook.com/profile.php?id=61594071114889" id="socialFacebook" aria-label="Facebook" target="_blank" rel="noopener">
+          <a href="#" id="socialFacebook" aria-label="Facebook" target="_blank" rel="noopener">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3.5h-2.3A4.2 4.2 0 0 0 10.5 7.7v2.6H8v3.6h2.5V21h3.7v-7.1h2.8l.5-3.6h-3.3V8.1c0-.9.4-1.6 1.7-1.6H17V3.5Z"/></svg>
           </a>
         </div>
@@ -1500,7 +1504,17 @@
       <input type="email" id="checkoutEmail" placeholder="Tu email" aria-label="Tu email">
       <input type="tel" id="checkoutPhone" placeholder="Tu teléfono" aria-label="Tu teléfono">
       <input type="text" id="checkoutNif" placeholder="NIF/CIF de la empresa (si aplica)" aria-label="NIF o CIF de la empresa">
-      <input type="text" id="checkoutAddress" placeholder="Dirección de envío" aria-label="Dirección de envío">
+      <input type="text" id="checkoutAddress" placeholder="Dirección de envío" aria-label="Dirección de envío" autocomplete="street-address">
+      <div class="checkout-row">
+        <input type="text" id="checkoutZip" placeholder="Código postal" aria-label="Código postal" inputmode="numeric" maxlength="5" autocomplete="postal-code">
+        <input type="text" id="checkoutCity" placeholder="Población" aria-label="Población" autocomplete="address-level2">
+      </div>
+      <select id="checkoutSlot" required aria-label="Horario de entrega preferido">
+        <option value="" disabled selected>Horario de entrega preferido</option>
+        <option value="Mañana (9:00–14:00)">Mañana (9:00–14:00)</option>
+        <option value="Tarde (15:00–19:00)">Tarde (15:00–19:00)</option>
+        <option value="Indiferente">Me da igual</option>
+      </select>
       <label class="cart-sub-check">
         <input type="checkbox" id="checkoutSubscribe">
         Suscribirme y recibir este pedido cada mes <strong>(-10%)</strong>
@@ -1787,6 +1801,13 @@
     "NIF/CIF de la empresa (si aplica)": ["Company VAT ID (optional)", "N° TVA / SIRET (facultatif)", "NIF/NIPC da empresa (opcional)", "NIF de l'empresa (opcional)"],
     "NIF o CIF de la empresa": ["Company VAT or Tax ID", "N° de TVA ou SIRET de l'entreprise", "NIF ou NIPC da empresa", "NIF o CIF de l'empresa"],
     "Dirección de envío": ["Shipping address", "Adresse de livraison", "Morada de envio", "Adreça d'enviament"],
+    "Código postal": ["Postcode", "Code postal", "Código postal", "Codi postal"],
+    "Población": ["Town / city", "Ville", "Localidade", "Població"],
+    "Horario de entrega preferido": ["Preferred delivery time", "Créneau de livraison souhaité", "Horário de entrega preferido", "Horari d'entrega preferit"],
+    "Mañana (9:00–14:00)": ["Morning (9:00–14:00)", "Matin (9h00–14h00)", "Manhã (9:00–14:00)", "Matí (9:00–14:00)"],
+    "Tarde (15:00–19:00)": ["Afternoon (15:00–19:00)", "Après-midi (15h00–19h00)", "Tarde (15:00–19:00)", "Tarda (15:00–19:00)"],
+    "Me da igual": ["Any time", "Peu m'importe", "Tanto faz", "M'és igual"],
+    "Elige un horario de entrega para tu pedido.": ["Choose a delivery time for your order.", "Choisissez un créneau de livraison pour votre commande.", "Escolhe um horário de entrega para a tua encomenda.", "Tria un horari d'entrega per a la teva comanda."],
     "Suscribirme y recibir este pedido cada mes": ["Subscribe and get this order every month", "M'abonner et recevoir cette commande chaque mois", "Subscrever e receber esta encomenda todos os meses", "Subscriure'm i rebre aquesta comanda cada mes"],
     "Es un pedido para reventa / distribución (mayorista)": ["This order is for resale / distribution (wholesale)", "Commande destinée à la revente / distribution (grossiste)", "É uma encomenda para revenda / distribuição (grossista)", "És una comanda per a revenda / distribució (majorista)"],
     "Déjanos al menos un email o un teléfono para confirmarte el pedido.": ["Leave us at least an email or phone number so we can confirm your order.", "Laissez-nous au moins un e-mail ou un téléphone pour confirmer votre commande.", "Deixa-nos pelo menos um email ou telefone para confirmarmos a tua encomenda.", "Deixa'ns almenys un correu o un telèfon per confirmar-te la comanda."],
@@ -1909,8 +1930,9 @@
 
   // Envía el pedido y los datos del cliente directamente al planning.
   // Devuelve true solo si Supabase confirmó que guardó AMBOS registros.
-  function sendOrderToPlanning({ name, email, phone, nif, address, wholesale, subscribe, lines, cajas, importe }){
+  function sendOrderToPlanning({ name, email, phone, nif, address, slot, wholesale, subscribe, lines, cajas, importe }){
     const notasPedido = (subscribe ? 'Suscripción mensual (-10%). ' : '')
+      + (slot ? 'Entrega: ' + slot + '. ' : '')
       + 'Tel: ' + (phone || '—') + ' · Email: ' + (email || '—')
       + ' · Idioma: ' + currentLang.toUpperCase();
     const pedido = {
@@ -2205,6 +2227,9 @@
   // Checkout: sends the order (customer + cart) to the planning (Supabase), with
   // the Google Sheet / mailto como respaldo si Supabase no responde.
   const checkoutForm = document.getElementById('checkoutForm');
+  const checkoutSlot = document.getElementById('checkoutSlot');
+  checkoutSlot.addEventListener('invalid', () => checkoutSlot.setCustomValidity(t('Elige un horario de entrega para tu pedido.')));
+  checkoutSlot.addEventListener('change', () => checkoutSlot.setCustomValidity(''));
   checkoutForm.addEventListener('submit', e => {
     e.preventDefault();
     if (cart.length === 0) return;
@@ -2212,7 +2237,12 @@
     const email = document.getElementById('checkoutEmail').value.trim();
     const phone = document.getElementById('checkoutPhone').value.trim();
     const nif = document.getElementById('checkoutNif').value.trim().toUpperCase();
-    const address = document.getElementById('checkoutAddress').value.trim();
+    const street = document.getElementById('checkoutAddress').value.trim();
+    const zip = document.getElementById('checkoutZip').value.trim();
+    const city = document.getElementById('checkoutCity').value.trim();
+    const slot = document.getElementById('checkoutSlot').value;
+    // Dirección completa en un solo texto, así encaja en los campos que ya tiene el planning
+    const address = [street, [zip, city].filter(Boolean).join(' ')].filter(Boolean).join(', ');
     const wholesale = document.getElementById('checkoutWholesale').checked;
     if (!email && !phone) {
       showToast(t('Déjanos un email o un teléfono para confirmarte el pedido.'), 2800);
@@ -2259,7 +2289,7 @@
     const checkoutBtn = checkoutForm.querySelector('button[type="submit"]');
     setSubmitting(checkoutBtn, t('Enviando pedido…'));
     sendOrderToPlanning({
-      name, email, phone, nif, address, wholesale, subscribe,
+      name, email, phone, nif, address, slot, wholesale, subscribe,
       lines: lineasPlanning, cajas: totalCajas, importe: cartTotalValue()
     }).then(sentToPlanning => {
       if (sentToPlanning) return true;
@@ -2268,9 +2298,9 @@
       return sendToSheet({
         sheet: 'Pedidos',
         fecha: new Date().toLocaleString('es-ES'),
-        nombre: name, email: email, telefono: phone, nif: nif, direccion: address,
+        nombre: name, email: email, telefono: phone, nif: nif, direccion: address, horario: slot,
         mayorista: wholesale ? 'Sí' : 'No',
-        pedido: pedido, total: total
+        pedido: pedido + (slot ? ' · Entrega: ' + slot : ''), total: total
       });
     }).then(sent => {
       if (!sent) {
@@ -2281,6 +2311,7 @@
           'Teléfono: ' + (phone || '—') + '\n' +
           'NIF: ' + (nif || '—') + '\n' +
           'Dirección de envío: ' + (address || '—') + '\n' +
+          'Horario de entrega: ' + (slot || '—') + '\n' +
           'Mayorista: ' + (wholesale ? 'Sí' : 'No') + '\n\n' +
           'Pedido: ' + pedido + '\n' +
           'Total: ' + total
