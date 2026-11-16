@@ -726,6 +726,44 @@
   /* Aviso para visores sin JavaScript (vista previa de WhatsApp, correo, Archivos…) */
   .nojs-banner{background:var(--chili); color:#fff; font-size:13.5px; line-height:1.45; padding:12px 16px; text-align:center;}
   .nojs-banner a{text-decoration:underline; font-weight:700;}
+  /* Dónde comprar: tiendas y distribuidores */
+  .navlinks a[hidden], .mobile-nav a[hidden], section[hidden], .loc-tabs[hidden], .loc-tab[hidden]{display:none !important;}
+  .locator{background:var(--cream-2);}
+  .locator .section-head{margin-bottom:28px;}
+  .loc-tabs{display:inline-flex; gap:4px; padding:5px; border-radius:50px; background:#fff; border:1px solid var(--line); margin-bottom:18px;}
+  .loc-tab{padding:10px 22px; border-radius:50px; border:0; background:transparent; font-family:inherit; font-size:14px; font-weight:700; color:var(--ink-soft); cursor:pointer;}
+  .loc-tab[aria-selected="true"]{background:var(--forest); color:#fff;}
+  .loc-search{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px;}
+  .loc-search input{flex:1 1 220px; min-width:0; padding:13px 20px; border-radius:50px; border:1px solid var(--line); font-family:inherit; font-size:14.5px; background:#fff; color:var(--ink);}
+  .loc-search .btn{padding:12px 22px;}
+  .loc-status{min-height:20px; font-size:13.5px; color:var(--chili-dark); margin:0 0 12px;}
+  .loc-grid{display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:20px; align-items:start;}
+  .loc-map{position:relative; z-index:0; isolation:isolate; height:480px; border-radius:22px; overflow:hidden; border:1px solid var(--line); background:var(--sage);}
+  .loc-map.is-off{display:none;}
+  .loc-count{font-size:13px; color:var(--ink-soft); margin:0 0 10px;}
+  .loc-list{list-style:none; margin:0; padding:0 4px 0 0; display:flex; flex-direction:column; gap:10px; max-height:440px; overflow-y:auto;}
+  .loc-item{background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 16px; cursor:pointer; transition:border-color .2s ease;}
+  .loc-item:hover{border-color:var(--forest-2);}
+  .loc-item.is-on{border-color:var(--forest); box-shadow:inset 0 0 0 1px var(--forest);}
+  .loc-item-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .loc-item h3{font-family:inherit; font-size:15px; font-weight:700; color:var(--forest); margin:0;}
+  .loc-km{flex-shrink:0; font-size:12px; font-weight:700; color:var(--forest); background:var(--sage); padding:2px 10px; border-radius:50px; white-space:nowrap;}
+  .loc-item p{font-size:13px; color:var(--ink-soft); line-height:1.5; margin:4px 0 0;}
+  .loc-links{display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:8px;}
+  .loc-links a, .leaflet-popup-content a.loc-go{font-size:13px; font-weight:700; color:var(--chili-dark); text-decoration:underline;}
+  .loc-none{margin-top:10px; border:1px dashed var(--forest-2); border-radius:16px; padding:14px 16px; font-size:13px; color:var(--ink-soft); line-height:1.5;}
+  .loc-none strong{display:block; color:var(--forest); font-size:14px; margin-bottom:2px;}
+  .loc-none a{color:var(--chili-dark); font-weight:700; text-decoration:underline;}
+  .loc-note{font-size:12px; color:var(--ink-soft); margin:16px 0 0;}
+  .loc-pin{background:none; border:0;}
+  .leaflet-popup-content{font-family:'Montserrat',sans-serif; font-size:13px; line-height:1.5; color:var(--ink);}
+  .leaflet-popup-content strong{color:var(--forest); font-size:14px;}
+  @media (max-width:860px){
+    .loc-grid{grid-template-columns:minmax(0,1fr);}
+    .loc-map{height:340px;}
+    .loc-list{max-height:none; overflow:visible; padding-right:0;}
+    .loc-search .btn{flex:1 1 auto; justify-content:center;}
+  }
 </style>
 <noscript>
 <style>
@@ -754,6 +792,7 @@
       <a href="#top">Inicio</a>
       <a href="#equipo">Nuestra historia</a>
       <a href="#sabores">Tienda</a>
+      <a href="#tiendas" hidden>Tiendas</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <div class="navactions">
@@ -782,6 +821,7 @@
     <a href="#top">Inicio</a>
     <a href="#equipo">Nuestra historia</a>
     <a href="#sabores">Tienda</a>
+    <a href="#tiendas" hidden>Tiendas</a>
     <a href="#contacto">Contacto</a>
   </nav>
 </header>
@@ -1176,6 +1216,36 @@
     </div>
   </section>
 
+  <!-- DÓNDE COMPRAR: tiendas y distribuidores. No se muestra mientras LOCATIONS (en el script) esté vacío. -->
+  <section class="locator" id="tiendas" hidden>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Dónde comprar</div>
+        <h2>Encuentra Mushbits cerca de ti</h2>
+        <p>Busca las tiendas donde ya puedes comprar Mushbits, o un distribuidor si tienes un negocio.</p>
+      </div>
+      <div class="loc-tabs" id="locTabs" role="tablist">
+        <button type="button" class="loc-tab" role="tab" data-type="tienda" aria-selected="true">Tiendas</button>
+        <button type="button" class="loc-tab" role="tab" data-type="distribuidor" aria-selected="false">Distribuidores</button>
+      </div>
+      <form class="loc-search" id="locSearch">
+        <input type="search" id="locQuery" placeholder="Código postal o población" aria-label="Código postal o población">
+        <button type="submit" class="btn btn-ghost">Buscar</button>
+        <button type="button" class="btn btn-primary" id="locNear">Cerca de mí</button>
+      </form>
+      <p class="loc-status" id="locStatus" role="status" aria-live="polite"></p>
+      <div class="loc-grid">
+        <div class="loc-map" id="locMap" role="region" aria-label="Mapa de tiendas y distribuidores"></div>
+        <div class="loc-side">
+          <p class="loc-count" id="locCount"></p>
+          <ul class="loc-list" id="locList"></ul>
+          <div class="loc-none" id="locNone"></div>
+        </div>
+      </div>
+      <p class="loc-note">Tu ubicación se usa solo para calcular distancias. No la guardamos.</p>
+    </div>
+  </section>
+
   <!-- FORMATOS / CANAL PROFESIONAL -->
   <section class="formats" id="horeca">
     <div class="wrap">
@@ -1520,6 +1590,35 @@
     "Inicio": ["Home", "Accueil", "Início", "Inici"],
     "Nuestra historia": ["Our story", "Notre histoire", "A nossa história", "La nostra història"],
     "Tienda": ["Shop", "Boutique", "Loja", "Botiga"],
+    // Dónde comprar
+    "Tiendas": ["Shops", "Magasins", "Lojas", "Botigues"],
+    "Dónde comprar": ["Where to buy", "Où acheter", "Onde comprar", "On comprar"],
+    "Encuentra Mushbits cerca de ti": ["Find Mushbits near you", "Trouvez Mushbits près de chez vous", "Encontra Mushbits perto de ti", "Troba Mushbits a prop teu"],
+    "Busca las tiendas donde ya puedes comprar Mushbits, o un distribuidor si tienes un negocio.": ["Find the shops where you can already buy Mushbits, or a distributor if you run a business.", "Trouvez les magasins où vous pouvez déjà acheter Mushbits, ou un distributeur si vous avez un commerce.", "Procura as lojas onde já podes comprar Mushbits, ou um distribuidor se tens um negócio.", "Busca les botigues on ja pots comprar Mushbits, o un distribuïdor si tens un negoci."],
+    "Distribuidores": ["Distributors", "Distributeurs", "Distribuidores", "Distribuïdors"],
+    "Código postal o población": ["Postcode or town", "Code postal ou ville", "Código postal ou localidade", "Codi postal o població"],
+    "Buscar": ["Search", "Rechercher", "Procurar", "Cercar"],
+    "Cerca de mí": ["Near me", "Près de moi", "Perto de mim", "A prop meu"],
+    "Mapa de tiendas y distribuidores": ["Map of shops and distributors", "Carte des magasins et des distributeurs", "Mapa de lojas e distribuidores", "Mapa de botigues i distribuïdors"],
+    "Tu ubicación se usa solo para calcular distancias. No la guardamos.": ["Your location is only used to work out distances. We don't store it.", "Votre position sert uniquement à calculer les distances. Nous ne la conservons pas.", "A tua localização é usada apenas para calcular distâncias. Não a guardamos.", "La teva ubicació només es fa servir per calcular distàncies. No la desem."],
+    "1 resultado": ["1 result", "1 résultat", "1 resultado", "1 resultat"],
+    "{n} resultados": ["{n} results", "{n} résultats", "{n} resultados", "{n} resultats"],
+    "de más cerca a más lejos": ["nearest first", "du plus proche au plus éloigné", "do mais perto ao mais longe", "de més a prop a més lluny"],
+    "Reparte en {zone}": ["Delivers in {zone}", "Livre en {zone}", "Distribui em {zone}", "Reparteix a {zone}"],
+    "Horeca y tiendas": ["Horeca and shops", "Horeca et magasins", "Horeca e lojas", "Horeca i botigues"],
+    "Cómo llegar": ["Get directions", "Itinéraire", "Como chegar", "Com arribar-hi"],
+    "Llamar": ["Call", "Appeler", "Ligar", "Trucar"],
+    "Escribir": ["Email", "Écrire", "Escrever", "Escriure"],
+    "Tu ubicación": ["Your location", "Votre position", "A tua localização", "La teva ubicació"],
+    "Buscando…": ["Searching…", "Recherche…", "A procurar…", "Cercant…"],
+    "No hemos encontrado ese lugar. Prueba con otro código postal o población.": ["We couldn't find that place. Try another postcode or town.", "Nous n'avons pas trouvé ce lieu. Essayez un autre code postal ou une autre ville.", "Não encontrámos esse lugar. Tenta outro código postal ou localidade.", "No hem trobat aquest lloc. Prova amb un altre codi postal o població."],
+    "No hemos podido obtener tu ubicación. Busca por código postal o población.": ["We couldn't get your location. Search by postcode or town instead.", "Nous n'avons pas pu obtenir votre position. Recherchez par code postal ou par ville.", "Não conseguimos obter a tua localização. Procura por código postal ou localidade.", "No hem pogut obtenir la teva ubicació. Cerca per codi postal o població."],
+    "No se ha podido cargar el mapa. La lista sigue funcionando.": ["The map couldn't be loaded. The list still works.", "La carte n'a pas pu être chargée. La liste fonctionne toujours.", "Não foi possível carregar o mapa. A lista continua a funcionar.", "No s'ha pogut carregar el mapa. La llista continua funcionant."],
+    "¿No hay tienda cerca?": ["No shop nearby?", "Pas de magasin à proximité ?", "Não há loja por perto?", "No hi ha cap botiga a prop?"],
+    "Pide en la web y te lo enviamos a casa.": ["Order online and we'll deliver to your door.", "Commandez en ligne et nous vous livrons à domicile.", "Encomenda no site e enviamos para tua casa.", "Demana-ho al web i t'ho enviem a casa."],
+    "¿No hay distribuidor en tu zona?": ["No distributor in your area?", "Pas de distributeur dans votre région ?", "Não há distribuidor na tua zona?", "No hi ha cap distribuïdor a la teva zona?"],
+    "Escríbenos y te servimos directamente, o hazte distribuidor de Mushbits.": ["Get in touch and we'll supply you directly, or become a Mushbits distributor.", "Écrivez-nous et nous vous livrons directement, ou devenez distributeur Mushbits.", "Escreve-nos e fornecemos-te diretamente, ou torna-te distribuidor Mushbits.", "Escriu-nos i et servim directament, o fes-te distribuïdor de Mushbits."],
+    "Contactar": ["Get in touch", "Nous contacter", "Contactar", "Contactar"],
     "Contacto": ["Contact", "Contact", "Contacto", "Contacte"],
     "Idioma": ["Language", "Langue", "Idioma", "Idioma"],
     "Buscar productos": ["Search products", "Rechercher des produits", "Pesquisar produtos", "Cercar productes"],
@@ -2750,6 +2849,217 @@
   lightboxClose.addEventListener('click', closeLightbox);
   lightboxOverlay.addEventListener('click', e => { if (e.target === lightboxOverlay) closeLightbox(); });
 
+  // ---------- Dónde comprar: tiendas y distribuidores ----------
+  // Un punto por línea. Campos:
+  //   type: 'tienda' | 'distribuidor'      name, address, zip, city, lat, lng   (obligatorios)
+  //   hours, phone, email, web             (opcionales)
+  //   zone: 'La Rioja y Navarra'           (distribuidores: zona de reparto)
+  //   serves: 'horeca' | 'tiendas' | 'ambos'   radiusKm: 60   (distribuidores, opcionales)
+  // Mientras la lista esté vacía, la sección y su enlace del menú no se muestran.
+  const LOCATIONS = [];
+  let renderLocator = function(){};
+  (function(){
+    const section = document.getElementById('tiendas');
+    if (!section || !LOCATIONS.length) return;
+    section.hidden = false;
+    document.querySelectorAll('a[href="#tiendas"]').forEach(a => { a.hidden = false; });
+
+    const tabsBar = document.getElementById('locTabs');
+    const tabs = Array.prototype.slice.call(tabsBar.querySelectorAll('.loc-tab'));
+    const listEl = document.getElementById('locList');
+    const countEl = document.getElementById('locCount');
+    const noneEl = document.getElementById('locNone');
+    const statusEl = document.getElementById('locStatus');
+    const mapEl = document.getElementById('locMap');
+    const queryEl = document.getElementById('locQuery');
+    const PIN = { tienda: '#DE5533', distribuidor: '#C99A3E', on: '#1F3B2C' };
+
+    const has = type => LOCATIONS.some(l => l.type === type);
+    let type = has('tienda') ? 'tienda' : 'distribuidor';
+    tabs.forEach(b => { b.hidden = !has(b.dataset.type); });
+    tabsBar.hidden = !(has('tienda') && has('distribuidor'));
+
+    let origin = null;      // punto de referencia: { lat, lng }
+    let selected = -1;      // índice en LOCATIONS
+    let statusKey = '';
+    let map = null, layer = null, markers = {}, leafletLoading = null;
+
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const plain = v => String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+    function km(a, b){
+      const rad = x => x * Math.PI / 180;
+      const h = Math.pow(Math.sin(rad(b.lat - a.lat) / 2), 2) + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.pow(Math.sin(rad(b.lng - a.lng) / 2), 2);
+      return 12742 * Math.asin(Math.sqrt(h));
+    }
+    function fmtKm(d){
+      const txt = d < 10 ? d.toFixed(1) : String(Math.round(d));
+      return (currentLang === 'en' ? txt : txt.replace('.', ',')) + ' km';
+    }
+    function visible(){
+      return LOCATIONS.map((l, i) => ({ l: l, i: i, d: origin ? km(origin, l) : null }))
+        .filter(o => o.l.type === type)
+        .sort((a, b) => origin ? a.d - b.d : (a.l.city + a.l.name).localeCompare(b.l.city + b.l.name));
+    }
+    const fullAddress = l => [l.address, [l.zip, l.city].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    const routeUrl = l => 'https://www.google.com/maps/dir/?api=1&destination=' + l.lat + ',' + l.lng;
+    function setStatus(key){ statusKey = key || ''; statusEl.textContent = statusKey ? t(statusKey) : ''; }
+
+    function renderList(){
+      const items = visible();
+      const servesTxt = { horeca: 'Horeca', tiendas: 'Tiendas', ambos: 'Horeca y tiendas' };
+      countEl.textContent = t(items.length === 1 ? '1 resultado' : '{n} resultados', { n: items.length })
+        + (origin ? ' · ' + t('de más cerca a más lejos') : '');
+      listEl.innerHTML = items.map(o => {
+        const l = o.l;
+        const lines = [esc(fullAddress(l))];
+        if (l.hours) lines.push(esc(l.hours));
+        if (l.zone) lines.push(esc(t('Reparte en {zone}', { zone: l.zone })));
+        if (servesTxt[l.serves]) lines.push(esc(t(servesTxt[l.serves])));
+        const links = ['<a href="' + routeUrl(l) + '" target="_blank" rel="noopener">' + esc(t('Cómo llegar')) + '</a>'];
+        if (l.phone) links.push('<a href="tel:' + esc(String(l.phone).replace(/\s+/g, '')) + '">' + esc(t('Llamar')) + '</a>');
+        if (l.email) links.push('<a href="mailto:' + esc(l.email) + '">' + esc(t('Escribir')) + '</a>');
+        if (l.web) links.push('<a href="' + esc(l.web) + '" target="_blank" rel="noopener">Web</a>');
+        return '<li class="loc-item' + (o.i === selected ? ' is-on' : '') + '" data-i="' + o.i + '">' +
+          '<div class="loc-item-top"><h3>' + esc(l.name) + '</h3>' + (o.d == null ? '' : '<span class="loc-km">' + fmtKm(o.d) + '</span>') + '</div>' +
+          '<p>' + lines.join('<br>') + '</p>' +
+          '<div class="loc-links">' + links.join('') + '</div></li>';
+      }).join('');
+      noneEl.innerHTML = type === 'tienda'
+        ? '<strong>' + esc(t('¿No hay tienda cerca?')) + '</strong>' + esc(t('Pide en la web y te lo enviamos a casa.')) + ' <a href="#sabores">' + esc(t('Ver sabores')) + '</a>'
+        : '<strong>' + esc(t('¿No hay distribuidor en tu zona?')) + '</strong>' + esc(t('Escríbenos y te servimos directamente, o hazte distribuidor de Mushbits.')) + ' <a href="#contacto">' + esc(t('Contactar')) + '</a>';
+    }
+
+    function pin(color, big){
+      const w = big ? 34 : 28, h = big ? 44 : 36;
+      return L.divIcon({
+        className: 'loc-pin', iconSize: [w, h], iconAnchor: [w / 2, h], popupAnchor: [0, -h + 6],
+        html: '<svg width="' + w + '" height="' + h + '" viewBox="0 0 28 36"><path d="M14 1C6.8 1 1 6.8 1 14c0 9.6 13 21 13 21s13-11.400 13-21C27 6.800 21.200 1 14 1z" fill="' + color + '" stroke="#FBF9F3" stroke-width="2"/><circle cx="14" cy="14" r="4.500" fill="#FBF9F3"/></svg>'
+      });
+    }
+    function drawMap(fit){
+      if (!map) return;
+      layer.clearLayers();
+      markers = {};
+      const items = visible();
+      items.forEach(o => {
+        const l = o.l;
+        if (l.radiusKm) L.circle([l.lat, l.lng], { radius: l.radiusKm * 1000, color: PIN.distribuidor, weight: 1, fillOpacity: 0.12, interactive: false }).addTo(layer);
+        const m = L.marker([l.lat, l.lng], { icon: pin(o.i === selected ? PIN.on : PIN[l.type], o.i === selected), title: l.name, zIndexOffset: o.i === selected ? 500 : 0 }).addTo(layer);
+        m.bindPopup('<strong>' + esc(l.name) + '</strong><br>' + esc(fullAddress(l)) + '<br><a class="loc-go" href="' + routeUrl(l) + '" target="_blank" rel="noopener">' + esc(t('Cómo llegar')) + '</a>');
+        m.on('click', () => select(o.i, false));
+        markers[o.i] = m;
+      });
+      if (origin) {
+        L.circleMarker([origin.lat, origin.lng], { radius: 8, color: '#FBF9F3', weight: 3, fillColor: '#378ADD', fillOpacity: 1 }).addTo(layer).bindTooltip(t('Tu ubicación'));
+      }
+      if (fit && items.length) {
+        const pts = (origin ? items.slice(0, 3) : items).map(o => [o.l.lat, o.l.lng]);
+        if (origin) pts.push([origin.lat, origin.lng]);
+        map.fitBounds(pts, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+    function ensureMap(){
+      if (map) return Promise.resolve(true);
+      if (!leafletLoading) {
+        leafletLoading = new Promise(resolve => {
+          const css = document.createElement('link');
+          css.rel = 'stylesheet';
+          css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+          document.head.appendChild(css);
+          const sc = document.createElement('script');
+          sc.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+          sc.onload = () => resolve(true);
+          sc.onerror = () => resolve(false);
+          document.head.appendChild(sc);
+        }).then(ok => {
+          if (!ok || !window.L) { mapEl.classList.add('is-off'); setStatus('No se ha podido cargar el mapa. La lista sigue funcionando.'); return false; }
+          map = L.map(mapEl, { scrollWheelZoom: false });
+          // Los créditos del mapa se abren en otra pestaña, para no sacar al cliente de la tienda
+          map.attributionControl.setPrefix(false);
+          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' }).addTo(map);
+          layer = L.layerGroup().addTo(map);
+          drawMap(true);
+          return true;
+        });
+      }
+      return leafletLoading;
+    }
+    function select(i, move){
+      selected = i;
+      renderList();
+      drawMap(false);
+      if (map && markers[i]) {
+        if (move) map.setView(markers[i].getLatLng(), Math.max(map.getZoom(), 14));
+        markers[i].openPopup();
+      }
+      if (!move) {
+        const li = listEl.querySelector('[data-i="' + i + '"]');
+        if (li && listEl.scrollHeight > listEl.clientHeight) listEl.scrollTop = li.offsetTop - listEl.offsetTop;
+      }
+    }
+    function setOrigin(o){
+      origin = o;
+      selected = -1;
+      setStatus('');
+      renderList();
+      ensureMap().then(ok => { if (ok) drawMap(true); });
+    }
+
+    tabs.forEach(b => b.addEventListener('click', () => {
+      type = b.dataset.type;
+      selected = -1;
+      tabs.forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+      renderList();
+      ensureMap().then(ok => { if (ok) drawMap(true); });
+    }));
+    listEl.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      const li = e.target.closest('.loc-item');
+      if (li) ensureMap().then(() => select(Number(li.dataset.i), true));
+    });
+    document.getElementById('locSearch').addEventListener('submit', e => {
+      e.preventDefault();
+      const q = queryEl.value.trim();
+      if (!q) return;
+      // Primero, sin salir de la página: ¿coincide con el código postal o la población de algún punto?
+      const hit = LOCATIONS.filter(l => plain(l.zip) === plain(q) || plain(l.city) === plain(q))[0];
+      if (hit) { setOrigin({ lat: hit.lat, lng: hit.lng }); return; }
+      setStatus('Buscando…');
+      fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=es,pt,fr,ad&q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(res => {
+          if (!res || !res.length) { setStatus('No hemos encontrado ese lugar. Prueba con otro código postal o población.'); return; }
+          setOrigin({ lat: Number(res[0].lat), lng: Number(res[0].lon) });
+        })
+        .catch(() => setStatus('No hemos encontrado ese lugar. Prueba con otro código postal o población.'));
+    });
+    document.getElementById('locNear').addEventListener('click', () => {
+      const fail = () => setStatus('No hemos podido obtener tu ubicación. Busca por código postal o población.');
+      if (!navigator.geolocation) { fail(); return; }
+      setStatus('Buscando…');
+      navigator.geolocation.getCurrentPosition(
+        pos => setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        fail, { timeout: 10000, maximumAge: 300000 });
+    });
+
+    // El mapa (Leaflet + OpenStreetMap) solo se descarga cuando la sección se acerca a la pantalla
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        if (entries.some(en => en.isIntersecting)) { io.disconnect(); ensureMap(); }
+      }, { rootMargin: '600px' });
+      io.observe(section);
+    } else {
+      ensureMap();
+    }
+
+    renderLocator = function(){
+      statusEl.textContent = statusKey ? t(statusKey) : '';
+      renderList();
+      drawMap(false);
+    };
+    renderList();
+  })();
+
   // ---------- Idiomas: aplicar el idioma elegido a toda la página ----------
   (function () {
     const langSelect = document.getElementById('langSelect');
@@ -2796,6 +3106,7 @@
       });
       renderCart();
       renderWishlist();
+      renderLocator();
       if (quizOverlay.classList.contains('show')) quizRefreshLang();
     }
 
