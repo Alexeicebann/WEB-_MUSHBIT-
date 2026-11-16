@@ -945,7 +945,7 @@
               <div><strong>9,5 g</strong>grasas</div>
             </div>
             <div class="flavor-buy">
-              <span class="price">18,00 €</span>
+              <span class="price">7,92 €</span>
               <span class="flavor-units">Value pack de 12 uds. (20 g c/u) · IVA incluido</span>
               <div class="qty-stepper js-only" role="group" aria-label="Cantidad de cajas">
                 <button type="button" class="qty-btn" data-qty="-1" aria-label="Restar unidad">−</button>
@@ -975,7 +975,7 @@
               <div><strong>10 g</strong>grasas</div>
             </div>
             <div class="flavor-buy">
-              <span class="price">18,00 €</span>
+              <span class="price">7,92 €</span>
               <span class="flavor-units">Value pack de 12 uds. (20 g c/u) · IVA incluido</span>
               <div class="qty-stepper js-only" role="group" aria-label="Cantidad de cajas">
                 <button type="button" class="qty-btn" data-qty="-1" aria-label="Restar unidad">−</button>
@@ -1005,7 +1005,7 @@
               <div><strong>8,5 g</strong>grasas</div>
             </div>
             <div class="flavor-buy">
-              <span class="price">18,00 €</span>
+              <span class="price">7,92 €</span>
               <span class="flavor-units">Value pack de 12 uds. (20 g c/u) · IVA incluido</span>
               <div class="qty-stepper js-only" role="group" aria-label="Cantidad de cajas">
                 <button type="button" class="qty-btn" data-qty="-1" aria-label="Restar unidad">−</button>
@@ -1035,7 +1035,7 @@
               <div><strong>—</strong>grasas</div>
             </div>
             <div class="flavor-buy">
-              <span class="price">18,00 €</span>
+              <span class="price">7,92 €</span>
               <span class="flavor-units">Value pack de 12 uds. (20 g c/u) · IVA incluido</span>
               <div class="qty-stepper js-only" role="group" aria-label="Cantidad de cajas">
                 <button type="button" class="qty-btn" data-qty="-1" aria-label="Restar unidad">−</button>
@@ -2029,10 +2029,10 @@
   // gestionamos cantidad, carrito y favoritos de cada ficha.
   // Nombres en español: es lo que llega al planning; en pantalla se traducen con t().
   const flavorData = {
-    original:{ name:'Chips Shiitake · Original', price:'18,00 €', units:12 },
-    sal:{ name:'Chips Shiitake · Sal Marina', price:'18,00 €', units:12 },
-    picante:{ name:'Chips Shiitake · Picante', price:'18,00 €', units:12 },
-    mixto:{ name:'Pack Mixto · 4 de cada sabor', price:'18,00 €', units:12 }
+    original:{ name:'Chips Shiitake · Original', price:'7,92 €', units:12 },
+    sal:{ name:'Chips Shiitake · Sal Marina', price:'7,92 €', units:12 },
+    picante:{ name:'Chips Shiitake · Picante', price:'7,92 €', units:12 },
+    mixto:{ name:'Pack Mixto · 4 de cada sabor', price:'7,92 €', units:12 }
   };
   const flavorSwitch = document.querySelector('.flavor-switch');
   const flavorPanelFor = key => flavorSwitch.querySelector('.flavor-panel[data-flavor="' + key + '"]');
@@ -2077,6 +2077,8 @@
 
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem('mushbitsCart') || '[]'); } catch(err) { cart = []; }
+  // Un carrito guardado de una visita anterior puede traer un precio antiguo: manda el actual.
+  cart.forEach(i => { if (flavorData[i.key]) i.price = flavorData[i.key].price; });
 
   function saveCart(){
     try { localStorage.setItem('mushbitsCart', JSON.stringify(cart)); } catch(err) {}
